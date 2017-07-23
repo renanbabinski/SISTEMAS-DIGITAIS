@@ -1,0 +1,40 @@
+typedef struct {
+    float x, y;
+} Point;
+
+float TriangleArea(Point a, Point b, Point c){
+    return (((b.x - a.x)*(c.y - a.y) - (c.x - a.x) * (b.y - a.y))/2);
+}
+
+int PointInsideTriangle(Point a, Point b, Point c, Point target){
+    float ABC = TriangleArea(a,b,c);
+    float ACT = TriangleArea(a,c,target);
+    float ABT = TriangleArea(a,b,target);
+    float CTB = TriangleArea(c,target,b);
+
+    if(ABC == ACT+ABT+CTB)
+        return 1;
+
+    return 0;
+}
+
+int main()
+{
+    Point a, b, c;
+    Point d; // Ponto
+    a.x = 1; a.y = 1;
+    b.x = 3; b.y = 1;
+    c.x = 2; c.y = 3;
+    d.x = 1; d.y = 0;
+
+    if (PointInsideTriangle(a,b,c,d)){
+        printf("O ponto esta dentro do triangulo\n");
+    }
+    else {
+        printf("O ponto esta fora do triangulo\n");
+    }
+
+    system("PAUSE");
+
+    return 0;
+}
