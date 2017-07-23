@@ -1,0 +1,107 @@
+module sinal(
+	input [10:0] ponto1x,
+	input [10:0] ponto1y,
+	input [10:0] ponto2x,
+	input [10:0] ponto2y,
+	input [10:0] ponto3x,
+	input [10:0] ponto3y,
+	output saida1
+	);
+
+wire [20:0] aux1;
+wire [20:0] aux2;
+wire [20:0] aux3;
+wire [20:0] aux4;
+
+assign aux1 = ponto1x - ponto3x;
+assign aux2 = ponto2y - ponto3y;
+assign aux3 = ponto2x - ponto3x;
+assign aux4 = ponto1y - ponto3y;
+assign saida1 = (aux1 * aux2) - (aux3 * aux4);
+
+endmodule
+
+module pontoNoTriangulo(
+	input [10:0] ponto1x,
+	input [10:0] ponto1y,
+	input [10:0] ponto2x,
+	input [10:0] ponto2y,
+	input [10:0] ponto3x,
+	input [10:0] ponto3y,
+	input [10:0] pontotx,
+	input [10:0] pontoty,
+	output saida1
+	);
+
+wire b1;
+wire b2;
+wire b3;
+
+reg s1_reg;
+
+assign saida1 = s1_reg;
+
+sinal a(pontotx, pontoty, ponto1x, ponto1y, ponto2x, ponto2y, b1);
+sinal b(pontotx, pontoty, ponto2x, ponto2y, ponto3x, ponto3y, b2);
+sinal c(pontotx, pontoty, ponto3x, ponto3y, ponto1x, ponto1y, b3);
+
+always @(*) begin
+	if(b1 == b2 && b2 == b3)begin
+		s1_reg <= 1;
+	end		
+	else begin
+		s1_reg <= 0;
+	end
+end
+
+endmodule
+
+module teste;
+
+reg [10:0] ponto1x;
+reg [10:0] ponto1y;
+reg [10:0] ponto2x;
+reg [10:0] ponto2y;
+reg [10:0] ponto3x;
+reg [10:0] ponto3y;
+reg [10:0] pontotx;
+reg [10:0] pontoty;
+wire saida1;
+
+pontoNoTriangulo a(ponto1x, ponto1y, ponto2x, ponto2y, ponto3x, ponto3y, pontotx, pontoty, saida1);
+
+initial begin
+	$dumpvars(0, a);
+	#6;
+	ponto1x <= 4; ponto1y <= 9; 
+	ponto2x <= 9; ponto2y <= 5;
+	ponto3x <= 12; ponto3y <= 11;
+	pontotx <= 9; pontoty <= 9;
+	#6;
+	ponto1x <= 6; ponto1y <= 1; 
+	ponto2x <= 9; ponto2y <= 3;
+	ponto3x <= -4; ponto3y <= 15;
+	pontotx <= -5; pontoty <= -4;
+	#6;
+	ponto1x <= 1; ponto1y <= 2; 
+	ponto2x <= 1; ponto2y <= 2;
+	ponto3x <= 2; ponto3y <= 21;
+	pontotx <= 3; pontoty <= 1;
+	#6;
+	ponto1x <= 6; ponto1y <= 7; 
+	ponto2x <= 7; ponto2y <= 8;
+	ponto3x <= 8; ponto3y <= 18;
+	pontotx <= 9; pontoty <= 0;
+	#6;
+	ponto1x <= 4; ponto1y <= 9; 
+	ponto2x <= 9; ponto2y <= 5;
+	ponto3x <= 12; ponto3y <= 11;
+	pontotx <= 9; pontoty <= 9;
+	#12
+
+
+	$finish;
+
+end
+
+endmodule
